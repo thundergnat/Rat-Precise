@@ -36,13 +36,17 @@ In base 10, Rational fractions with denominators that are a power of 2 or 5 will
 
 By default, the precise method stringifies terminating fractions completely. If the fraction is non-terminating, Rats return at least 16 places of precision, FatRats return at least 32 places. Any trailing zeros are trimmed.
 
-If an integer parameter is passed, the fractional portion will be calculated to that many digits, but may have non-significant digits trimmed.
+If an integer parameter is passed, the fractional portion will be calculated to that many digits, but may have non-significant digits trimmed. The integer must be non negative. Negative integers will be ignored. It can be zero, and it will return zero fractional digits, but it would be much more efficient to just Int the Rat.
 
 If a :z flag is passed, trailing (non-significant) zeros will be preserved.
 
 Parameters can be in any order and combination.
 
 Note that the .precise method only affects stringification. It doesn't change the internal representations of the Rationals, nor does it make calculations any more precise. It is merely a shortcut to express Rational strings to a configurable specified precision.
+
+The :z flag is mostly intended to be used in combination with a digits parameter. It may be used on its own, but may return slightly non-intuitive results. In order to save unnecessary calculations (and speed up the overall process) the .precise method only checks for terminating fractions that multiples less than 10. To avoid lots of pointless checks and general slowdown, any terminating fraction that is a multiple of 10 or above will be calculated out to the default precision (16 digits for Rats, 32 for FatRats or the number of character in the denominator if that is greater) since it will terminate within that precision.
+
+The point is, if you want to keep trailing zeros, you are better off specifying digits of precision also.
 
 AUTHOR
 ======
@@ -55,3 +59,4 @@ LICENSE
 =======
 
 Licensed under The Artistic 2.0; see LICENSE.
+
