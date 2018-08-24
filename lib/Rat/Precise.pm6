@@ -1,4 +1,4 @@
-unit module Rat::Precise:ver<0.0.1>:auth<github:thundergnat>;
+unit module Rat::Precise:ver<0.0.2>:auth<github:thundergnat>;
 use MONKEY-TYPING;
 use nqp;
 
@@ -14,52 +14,50 @@ augment class FatRat {
         if $fract {
             if $digits.defined and $digits > 0 {
                 $precision = $digits;
-                $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
+
             }
             elsif $digits.defined and $digits == 0 {
                 return $result;
             }
             else {
 
-               my $base5 = $!denominator.base(5);
+                my $base5;
+                $base5 = $!denominator.base(5) unless $digits.defined;
 
-               # denominator is terminating power of 2
-               if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) {
-                   $precision = msb($!denominator);
-                   $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
-               }
-               # denominator is terminating power of 5
-               elsif my $base5b = $base5.parse-base(2) and
-                     not $base5b +& ($base5b - 1) {
-                   $precision = nqp::chars($base5.Str) + 1;
-                   $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
-               }
-               # non-terminating, return a minimum 32 terms
-               elsif $!denominator < 10000000000000000000000000000000 {
-                   $precision = 32;
-                   $fract *=        100000000000000000000000000000000;
-               }
-               # denominator > min and non-terminating, or power of 10 or
-               # greater, return $!denominator.chars + 1 digits
-               else {
-                   $precision = nqp::chars($!denominator.Str) + 1;
-                   $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
-               }
-           }
-           my $f  = round($fract).Str;
-           my int $fc = nqp::chars($f);
-           unless $z {
-               if +$f {
-                   $f.=chop while $f.chars and substr($f,*-1) eq '0' ; # Remove trailing zeros
-               }
-               else {
-                   return $result;
-               }
-           }
-           $result ~= '.' ~ '0' x ($precision - $fc) ~ $f;
-       }
-       $result
-    }
+                # denominator is terminating power of 2
+                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) and !$digits.defined {
+                    $precision = msb($!denominator);
+                }
+                # denominator is terminating power of 5
+                elsif my $base5b = $base5.parse-base(2) and
+                  not $base5b +& ($base5b - 1) {
+                    $precision = nqp::chars($base5.Str);
+                }
+                # non-terminating, return a minimum 32 terms
+                elsif $!denominator < 10000000000000000000000000000000 {
+                    $precision = 32;
+                }
+                # denominator > min and non-terminating, or power of 10 or
+                # greater, return $!denominator.chars + 1 digits
+                else {
+                    $precision = nqp::chars($!denominator.Str) + 1;
+                }
+            }
+            $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
+            my $f  = round($fract).Str;
+            my int $fc = nqp::chars($f);
+            unless $z {
+                if +$f { # Remove trailing zeros
+                    $f.=chop while $f.chars and substr($f,*-1) eq '0';
+                }
+                else {
+                    return $result;
+                }
+            }
+            $result ~= '.' ~ '0' x ($precision - $fc) ~ $f;
+        }
+        $result
+     }
 }
 
 augment class Rat {
@@ -71,7 +69,7 @@ augment class Rat {
 
         my int $precision = 0;
 
-        # fight floating point noise
+        # fight floating point noise, Rats only
         if $fract.Num == 1e0 {
             $whole += 1;
             $fract = 0;
@@ -79,51 +77,48 @@ augment class Rat {
         elsif $fract {
             if $digits.defined and $digits > 0 {
                 $precision = $digits;
-                $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
             }
             elsif $digits.defined and $digits == 0 {
                 return $result;
             }
             else {
 
-               my $base5 = $!denominator.base(5);
+                my $base5;
+                $base5 = $!denominator.base(5) unless $digits.defined;
 
-               # denominator is terminating power of 2
-               if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) {
-                   $precision = msb($!denominator);
-                   $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
-               }
-               # denominator is terminating power of 5
-               elsif my $base5b = $base5.parse-base(2) and
-                     not $base5b +& ($base5b - 1) {
-                   $precision = nqp::chars($base5.Str) + 1;
-                   $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
-               }
-               # non-terminating, return a minimum 16 terms
-               elsif $!denominator < 1000000000000000 {
-                   $precision = 16;
-                   $fract *=        10000000000000000;
-               }
-                # denominator > min and non-terminating, or power of 10 or
-                # greater, return $!denominator.chars + 1 digits
-               else {
-                   $precision = nqp::chars($!denominator.Str) + 1;
-                   $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
-               }
-           }
-           my $f  = round($fract).Str;
-           my int $fc = nqp::chars($f);
-           unless $z {
-               if +$f {
-                   $f.=chop while $f.chars and substr($f,*-1) eq '0' ; # Remove trailing zeros
-               }
-               else {
-                   return $result;
-               }
-           }
-           $result ~= '.' ~ '0' x ($precision - $fc) ~ $f;
-       }
-       $result
+                # denominator is terminating power of 2
+                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) and !$digits.defined {
+                    $precision = msb($!denominator);
+                }
+                # denominator is terminating power of 5
+                elsif my $base5b = $base5.parse-base(2) and
+                  not $base5b +& ($base5b - 1) {
+                    $precision = nqp::chars($base5.Str);
+                }
+                # non-terminating, return a minimum 16 terms
+                elsif $!denominator < 1000000000000000 {
+                    $precision = 16;
+                }
+                 # denominator > min and non-terminating, or power of 10 or
+                 # greater, return $!denominator.chars + 1 digits
+                else {
+                    $precision = nqp::chars($!denominator.Str) + 1;
+                }
+            }
+            $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
+            my $f  = round($fract).Str;
+            my int $fc = nqp::chars($f);
+            unless $z {
+                if +$f { # Remove trailing zeros
+                    $f.=chop while $f.chars and substr($f,*-1) eq '0';
+                }
+                else {
+                    return $result;
+                }
+            }
+            $result ~= '.' ~ '0' x ($precision - $fc) ~ $f;
+        }
+    $result
     }
 }
 
@@ -187,6 +182,19 @@ Note that the .precise method only affects stringification. It doesn't change
 the internal representations of the Rationals, nor does it make calculations
 any more precise. It is merely a shortcut to express Rational strings to a
 configurable specified precision.
+
+The :z flag is mostly intended to be used in combination with a digits
+parameter. It may be used on its own, but may return slightly non-intuitive
+results. In order to save unnecessary calculations (and speed up the overall
+process) the .precise method only checks for terminating fractions that
+multiples less than 10. To avoid lots of pointless checks and general slowdown,
+any terminating fraction that is a multiple of 10 or above will be calculated
+out to the default precision (16 digits for Rats, 32 for FatRats or the number
+of character in the denominator if that is greater) since it will terminate
+within that precision.
+
+The point is, if you want to keep trailing zeros, you are better off specifying
+digits of precision also.
 
 =head1 AUTHOR
 
