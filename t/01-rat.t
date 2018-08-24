@@ -1,7 +1,7 @@
 use Test;
 use Rat::Precise;
 
-plan 73;
+plan *;
 
 can-ok( Rat, 'precise', 'Rat has been augmented with .precise');
 
@@ -70,6 +70,57 @@ is((.5**61).precise, '0.00000000000000000043368086899420177360298112034797668457
 is((.5**62).precise, '0.00000000000000000021684043449710088680149056017398834228515625', 'Testing .5**62');
 is((.5**63).precise, '0.000000000000000000108420217248550443400745280086994171142578125', 'Testing .5**63');
 
+is(Rat.new( 1,1).precise(25), '1', 'Testing digits parameter 1/1');
+is(Rat.new( 1,2).precise(25), '0.5', 'Testing digits parameter 1/2');
+is(Rat.new( 1,3).precise(25), '0.3333333333333333333333333', 'Testing digits parameter 1/3');
+is(Rat.new( 1,4).precise(25), '0.25', 'Testing digits parameter 1/4');
+is(Rat.new( 1,5).precise(25), '0.2', 'Testing digits parameter 1/5');
+is(Rat.new( 1,6).precise(25), '0.1666666666666666666666667', 'Testing digits parameter 1/6');
+is(Rat.new( 1,7).precise(25), '0.1428571428571428571428571', 'Testing digits parameter 1/7');
+is(Rat.new( 1,8).precise(25), '0.125', 'Testing digits parameter 1/8');
+is(Rat.new( 1,9).precise(25), '0.1111111111111111111111111', 'Testing digits parameter 1/9');
+is(Rat.new(1,10).precise(25), '0.1', 'Testing digits parameter 1/10');
+is(Rat.new(1,11).precise(25), '0.0909090909090909090909091', 'Testing digits parameter 1/11');
+is(Rat.new(1,12).precise(25), '0.0833333333333333333333333', 'Testing digits parameter 1/12');
+is(Rat.new(1,13).precise(25), '0.0769230769230769230769231', 'Testing digits parameter 1/13');
+is(Rat.new(1,14).precise(25), '0.0714285714285714285714286', 'Testing digits parameter 1/14');
+is(Rat.new(1,15).precise(25), '0.0666666666666666666666667', 'Testing digits parameter 1/15');
+is(Rat.new(1,16).precise(25), '0.0625', 'Testing digits parameter 1/16');
+is(Rat.new(1,17).precise(25), '0.0588235294117647058823529', 'Testing digits parameter 1/17');
+is(Rat.new(1,18).precise(25), '0.0555555555555555555555556', 'Testing digits parameter 1/18');
+is(Rat.new(1,19).precise(25), '0.0526315789473684210526316', 'Testing digits parameter 1/19');
+is(Rat.new(1,20).precise(25), '0.05', 'Testing digits parameter 1/20');
+is(Rat.new(1,21).precise(25), '0.047619047619047619047619', 'Testing digits parameter 1/21');
+is(Rat.new(1,22).precise(25), '0.0454545454545454545454545', 'Testing digits parameter 1/22');
+is(Rat.new(1,23).precise(25), '0.0434782608695652173913043', 'Testing digits parameter 1/23');
+is(Rat.new(1,24).precise(25), '0.0416666666666666666666667', 'Testing digits parameter 1/24');
+is(Rat.new(1,25).precise(25), '0.04', 'Testing digits parameter 1/25');
+
+is(Rat.new( 1,1).precise(25, :z), '1', 'Testing digits with :z flag parameter 1/1');
+is(Rat.new( 1,2).precise(25, :z), '0.5000000000000000000000000', 'Testing digits with :z flag parameter 1/2');
+is(Rat.new( 1,3).precise(25, :z), '0.3333333333333333333333333', 'Testing digits with :z flag parameter 1/3');
+is(Rat.new( 1,4).precise(25, :z), '0.2500000000000000000000000', 'Testing digits with :z flag parameter 1/4');
+is(Rat.new( 1,5).precise(25, :z), '0.2000000000000000000000000', 'Testing digits with :z flag parameter 1/5');
+is(Rat.new( 1,6).precise(25, :z), '0.1666666666666666666666667', 'Testing digits with :z flag parameter 1/6');
+is(Rat.new( 1,7).precise(25, :z), '0.1428571428571428571428571', 'Testing digits with :z flag parameter 1/7');
+is(Rat.new( 1,8).precise(25, :z), '0.1250000000000000000000000', 'Testing digits with :z flag parameter 1/8');
+is(Rat.new( 1,9).precise(25, :z), '0.1111111111111111111111111', 'Testing digits with :z flag parameter 1/9');
+is(Rat.new(1,10).precise(25, :z), '0.1000000000000000000000000', 'Testing digits with :z flag parameter 1/10');
+is(Rat.new(1,11).precise(25, :z), '0.0909090909090909090909091', 'Testing digits with :z flag parameter 1/11');
+is(Rat.new(1,12).precise(25, :z), '0.0833333333333333333333333', 'Testing digits with :z flag parameter 1/12');
+is(Rat.new(1,13).precise(25, :z), '0.0769230769230769230769231', 'Testing digits with :z flag parameter 1/13');
+is(Rat.new(1,14).precise(25, :z), '0.0714285714285714285714286', 'Testing digits with :z flag parameter 1/14');
+is(Rat.new(1,15).precise(25, :z), '0.0666666666666666666666667', 'Testing digits with :z flag parameter 1/15');
+is(Rat.new(1,16).precise(25, :z), '0.0625000000000000000000000', 'Testing digits with :z flag parameter 1/16');
+is(Rat.new(1,17).precise(25, :z), '0.0588235294117647058823529', 'Testing digits with :z flag parameter 1/17');
+is(Rat.new(1,18).precise(25, :z), '0.0555555555555555555555556', 'Testing digits with :z flag parameter 1/18');
+is(Rat.new(1,19).precise(25, :z), '0.0526315789473684210526316', 'Testing digits with :z flag parameter 1/19');
+is(Rat.new(1,20).precise(25, :z), '0.0500000000000000000000000', 'Testing digits with :z flag parameter 1/20');
+is(Rat.new(1,21).precise(25, :z), '0.0476190476190476190476190', 'Testing digits with :z flag parameter 1/21');
+is(Rat.new(1,22).precise(25, :z), '0.0454545454545454545454545', 'Testing digits with :z flag parameter 1/22');
+is(Rat.new(1,23).precise(25, :z), '0.0434782608695652173913043', 'Testing digits with :z flag parameter 1/23');
+is(Rat.new(1,24).precise(25, :z), '0.0416666666666666666666667', 'Testing digits with :z flag parameter 1/24');
+is(Rat.new(1,25).precise(25, :z), '0.0400000000000000000000000', 'Testing digits with :z flag parameter 1/25');
 
 is((7/1610).precise, '0.0043478260869565', 'Rat returns 16 digits by default');
 is((7/1610).precise(26), '0.00434782608695652173913043', 'digits parameter works');
