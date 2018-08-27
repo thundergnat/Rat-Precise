@@ -194,11 +194,11 @@ The :z flag is mostly intended to be used in combination with a digits
 parameter. It may be used on its own, but may return slightly non-intuitive
 results. In order to save unnecessary calculations (and speed up the overall
 process) the .precise method only checks for terminating fractions that
-multiples less than 10. To avoid lots of pointless checks and general slowdown,
-any terminating fraction that is a multiple of 10 or above will be calculated
-out to the default precision (16 digits for Rats, 32 for FatRats or the number
-of character in the denominator if that is greater) since it will terminate
-within that precision.
+multiples of 2 & 5 less than 10. To avoid lots of pointless checks and general
+slowdown, any terminating fraction that is a multiple of 10 or above will be
+calculated out to the default precision (16 digits for Rats, 32 for FatRats or
+the number of characters in the denominator if that is greater) since it will
+terminate within that precision.
 
 The point is, if you want to keep trailing zeros, you are better off specifying
 digits of precision also.
