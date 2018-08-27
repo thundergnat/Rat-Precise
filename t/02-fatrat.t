@@ -1,7 +1,7 @@
 use Test;
 use Rat::Precise;
 
-plan *;
+plan 152;
 
 can-ok( FatRat, 'precise', 'FatRat has been augmented with .precise');
 
@@ -152,12 +152,19 @@ is(FatRat.new(1,24).precise(45, :z), '0.0416666666666666666666666666666666666666
 is(FatRat.new(1,25).precise(45, :z), '0.040000000000000000000000000000000000000000000', 'Testing digits with :z flag parameter 1/25');
 
 
-is(FatRat.new(1,7**35).precise, '0.00000000000000000000000000000264', 'FatRat returns 32 places of precision by default');
-is(FatRat.new(1,7**35).precise(50), '0.00000000000000000000000000000263978525985381424962', 'digits parameter works');
-is(FatRat.new(1,7**35).precise(54), '0.00000000000000000000000000000263978525985381424961913', 'Non-significant zeros are trimmed');
+is(FatRat.new(1,7**35).precise,         '0.00000000000000000000000000000264', 'FatRat returns 32 places of precision by default');
+is(FatRat.new(1,7**35).precise(50),     '0.00000000000000000000000000000263978525985381424962', 'digits parameter works');
+is(FatRat.new(1,7**35).precise(54),     '0.00000000000000000000000000000263978525985381424961913', 'Non-significant zeros are trimmed');
 is(FatRat.new(1,7**35).precise(54, :z), '0.000000000000000000000000000002639785259853814249619130', 'unless the :z parameter is set');
-is(FatRat.new(1,7**35).precise(15), '0', 'Degenerate non-significant zeros are trimmed');
+is(FatRat.new(1,7**35).precise(15),     '0', 'Degenerate non-significant zeros are trimmed');
 is(FatRat.new(1,7**35).precise(15, :z), '0.000000000000000', 'unless the :z parameter is set');
-is(FatRat.new(1,7**35).precise(0), '0', 'Zero places returns integer portion only');
+is(FatRat.new(1,7**35).precise(0),      '0', 'Zero places returns integer portion only');
+
+is(FatRat.new(9999999999999999999999999999999999999999999999999999999,10000000000000000000000000000000000000000000000000000000).precise,
+             '0.9999999999999999999999999999999999999999999999999999999','No rounding when not appropriate');
+is(FatRat.new(9999999999999999999999999999999999999999999999999999999,10000000000000000000000000000000000000000000000000000000).precise(15),
+             '1', 'Rounds when appropriate');
+is(FatRat.new(9999999999999999999999999999999999999999999999999999999,10000000000000000000000000000000000000000000000000000000).precise(15,:z),
+             '1.000000000000000', 'Rounds but preserves zeros');
 
 done-testing;

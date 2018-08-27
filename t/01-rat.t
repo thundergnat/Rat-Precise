@@ -1,7 +1,7 @@
 use Test;
 use Rat::Precise;
 
-plan *;
+plan 123;
 
 can-ok( Rat, 'precise', 'Rat has been augmented with .precise');
 
