@@ -1,4 +1,4 @@
-unit module Rat::Precise:ver<0.0.2>:auth<github:thundergnat>;
+unit module Rat::Precise:ver<0.0.3>:auth<github:thundergnat>;
 use MONKEY-TYPING;
 use nqp;
 
@@ -21,11 +21,10 @@ augment class FatRat {
             }
             else {
 
-                my $base5;
-                $base5 = $!denominator.base(5) unless $digits.defined;
+                my $base5 = $!denominator.base(5);
 
                 # denominator is terminating power of 2
-                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) and !$digits.defined {
+                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) {
                     $precision = msb($!denominator);
                 }
                 # denominator is terminating power of 5
@@ -45,6 +44,10 @@ augment class FatRat {
             }
             $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
             my $f  = round($fract).Str;
+            if $digits.defined and $f == 10 ** $precision {
+                $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ ($whole + 1);
+                $f = $z ?? '0' x $precision !! '';
+            }
             my int $fc = nqp::chars($f);
             unless $z {
                 if +$f { # Remove trailing zeros
@@ -83,11 +86,10 @@ augment class Rat {
             }
             else {
 
-                my $base5;
-                $base5 = $!denominator.base(5) unless $digits.defined;
+                my $base5 = $!denominator.base(5);
 
                 # denominator is terminating power of 2
-                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) and !$digits.defined {
+                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) {
                     $precision = msb($!denominator);
                 }
                 # denominator is terminating power of 5
@@ -155,6 +157,10 @@ Pass in a boolean flag :z to preserve trailing zeros.
 
 =head1 DESCRIPTION
 
+The default Rat stringification routines are a fairly conservative tradeoff
+between speed and precision. This module shifts hard to the precision side at
+the expense of speed.
+
 Augments Rat and FatRat classes with a .precise method. Stringifies configurably
 to a more precise representation than default .Str methods.
 
@@ -170,9 +176,10 @@ If the fraction is non-terminating, Rats return at least 16 places of precision,
 FatRats return at least 32 places. Any trailing zeros are trimmed.
 
 If an integer parameter is passed, the fractional portion will be calculated to
-that many digits, but may have non-significant digits trimmed. The integer must be non
-negative. Negative integers will be ignored. It can be zero, and it will return zero
-fractional digits, but it would be much more efficient to just Int the Rat.
+that many digits, but may have non-significant digits trimmed. The integer must
+be non negative. Negative integers will be ignored. It can be zero, and it will
+return zero fractional digits, but it would be much more efficient to just Int
+the Rat.
 
 If a :z flag is passed, trailing (non-significant) zeros will be preserved.
 
