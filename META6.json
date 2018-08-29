@@ -1,7 +1,7 @@
 {
     "perl"          : "6.c",
     "name"          : "Rat::Precise",
-    "version"       : "0.0.4",
+    "version"       : "0.1.0",
     "description"   : "Configurable stringification for Rational numbers",
     "authors"       : [ "Steve Schulze (thundergnat)" ],
     "provides"      : { "Rat::Precise" : "lib/Rat/Precise.pm6" },
