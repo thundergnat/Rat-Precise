@@ -1,81 +1,19 @@
-unit module Rat::Precise:ver<0.0.4>:auth<github:thundergnat>;
-use MONKEY-TYPING;
+unit module Rat::Precise:ver<0.1.0>:auth<github:thundergnat>;
 use nqp;
 
-augment class FatRat {
-    method precise (Int $digits?, Bool :$z = False ) {
-        my $whole  = floor(abs(self));
-        my $fract  = abs(self) - $whole;
+my role Precise {
 
-        my $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ $whole;
-
-        my int $precision = 0;
-
-        if $fract {
-            if $digits.defined and $digits > 0 {
-                $precision = $digits;
-
-            }
-            elsif $digits.defined and $digits == 0 {
-                return $result;
-            }
-            else {
-
-                my $base5 = $!denominator.base(5);
-
-                # denominator is terminating power of 2
-                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) {
-                    $precision = msb($!denominator);
-                }
-                # denominator is terminating power of 5
-                elsif my $base5b = parse-base($base5, 2) and
-                  not $base5b +& ($base5b - 1) {
-                    $precision = nqp::chars($base5.Str);
-                }
-                # non-terminating, return a minimum 32 terms
-                elsif $!denominator < 10000000000000000000000000000000 {
-                    $precision = 32;
-                }
-                # denominator > min and non-terminating, or power of 10 or
-                # greater, return $!denominator.chars + 1 digits
-                else {
-                    $precision = nqp::chars($!denominator.Str) + 1;
-                }
-            }
-            my $pow = nqp::pow_I(10, nqp::decont($precision), Num, Int);
-            $fract *= $pow;
-            my $f  = round($fract).Str;
-            if $digits.defined and $f == $pow {
-                $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ ($whole + 1);
-                $f = $z ?? '0' x $precision !! '';
-            }
-            my int $fc = nqp::chars($f);
-            unless $z {
-                if +$f { # Remove trailing zeros
-                    $f = chop($f) while chars($f) and substr($f,*-1) eq '0';
-                }
-                else {
-                    return $result;
-                }
-            }
-            $result ~= '.' ~ '0' x ($precision - $fc) ~ $f;
-        }
-        $result
-     }
-}
-
-augment class Rat {
     method precise (Int $digits?, Bool :$z = False ) {
         my $whole  = floor(abs(self));
         my $fract  = abs(self) - $whole;
 
         # fight floating point noise, Rats only
-        if $fract.Num == 1e0 {
+        if nqp::eqaddr(self.WHAT,Rat) and $fract.Num == 1e0 {
             $whole += 1;
             $fract = 0;
         }
 
-        my $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ $whole;
+        my $result = nqp::if(nqp::islt_I(self.numerator, 0), '-', '') ~ $whole;
 
         my int $precision = 0;
 
@@ -87,33 +25,33 @@ augment class Rat {
                 return $result;
             }
             else {
-
-                my $base5 = $!denominator.base(5);
-
                 # denominator is terminating power of 2
-                if nqp::isfalse(nqp::bitand_I($!denominator, $!denominator - 1, Int)) {
-                    $precision = msb($!denominator);
+                if nqp::isfalse(nqp::bitand_I(self.denominator, self.denominator - 1, Int)) {
+                    $precision = msb(self.denominator);
                 }
                 # denominator is terminating power of 5
-                elsif my $base5b = parse-base($base5,2) and
-                  not $base5b +& ($base5b - 1) {
-                    $precision = nqp::chars($base5.Str);
+                elsif my $base5 = po5(self.denominator) {
+                    $precision = $base5;
                 }
-                # non-terminating, return a minimum 16 terms
-                elsif $!denominator < 1000000000000000 {
+                # non-terminating Rat, return a minimum 16 terms
+                elsif nqp::eqaddr(self.WHAT,Rat) and self.denominator < 1000000000000000 {
                     $precision = 16;
                 }
+                # non-terminating FatRat, return a minimum 16 terms
+                elsif nqp::eqaddr(self.WHAT,FatRat) and self.denominator < 10000000000000000000000000000000 {
+                    $precision = 32;
+                }
                  # denominator > min and non-terminating, or power of 10 or
-                 # greater, return $!denominator.chars + 1 digits
+                 # greater, return self.denominator.chars + 1 digits
                 else {
-                    $precision = nqp::chars($!denominator.Str) + 1;
+                    $precision = nqp::chars(self.denominator.Str) + 1;
                 }
             }
             my $pow = nqp::pow_I(10, nqp::decont($precision), Num, Int);
             $fract *= $pow;
             my $f  = round($fract).Str;
             if $digits.defined and $f == $pow {
-                $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ ($whole + 1);
+                $result = nqp::if(nqp::islt_I(self.numerator, 0), '-', '') ~ ($whole + 1);
                 $f = $z ?? '0' x $precision !! '';
             }
             my int $fc = nqp::chars($f);
@@ -129,7 +67,24 @@ augment class Rat {
         }
     $result
     }
+
+    sub po5 ($five is copy) {
+        my $div = 0;
+        loop {
+             $five /= 5;
+             $div++;
+             return False unless $five.narrow ~~ Int;
+             return $div if $five == 1;
+         }
+    }
 }
+
+
+use MONKEY-TYPING;
+
+augment class Rat    does Precise { };
+augment class FatRat does Precise { };
+
 
 =begin pod
 
