@@ -1,9 +1,11 @@
 use Test;
 use Rat::Precise;
 
-plan 152;
+plan 216;
 
-can-ok( FatRat, 'precise', 'FatRat has been augmented with .precise');
+can-ok( FatRat, 'precise', 'FatRat can .precise');
+
+# Testing terminating powers of 2 denominator
 
 is(FatRat.new( 1,2**0).precise, '1', 'Testing FatRat .5**0');
 is(FatRat.new( 1,2**1).precise, '0.5', 'Testing FatRat .5**1');
@@ -96,6 +98,74 @@ is(FatRat.new(1,2**87).precise, '0.000000000000000000000000006462348535570528709
 is(FatRat.new(1,2**88).precise, '0.0000000000000000000000000032311742677852643549664402033982923967414535582065582275390625', 'Testing FatRat .5**88');
 is(FatRat.new(1,2**89).precise, '0.00000000000000000000000000161558713389263217748322010169914619837072677910327911376953125', 'Testing FatRat .5**89');
 is(FatRat.new(1,2**90).precise, '0.000000000000000000000000000807793566946316088741610050849573099185363389551639556884765625', 'Testing FatRat .5**90');
+
+# Testing terminating powers of 5 denominator
+
+is(FatRat.new(1, 5**1).precise, '0.2', 'Testing FatRat .2**1');
+is(FatRat.new(1, 5**2).precise, '0.04', 'Testing FatRat .2**2');
+is(FatRat.new(1, 5**3).precise, '0.008', 'Testing FatRat .2**3');
+is(FatRat.new(1, 5**4).precise, '0.0016', 'Testing FatRat .2**4');
+is(FatRat.new(1, 5**5).precise, '0.00032', 'Testing FatRat .2**5');
+is(FatRat.new(1, 5**6).precise, '0.000064', 'Testing FatRat .2**6');
+is(FatRat.new(1, 5**7).precise, '0.0000128', 'Testing FatRat .2**7');
+is(FatRat.new(1, 5**8).precise, '0.00000256', 'Testing FatRat .2**8');
+is(FatRat.new(1, 5**9).precise, '0.000000512', 'Testing FatRat .2**9');
+is(FatRat.new(1,5**10).precise, '0.0000001024', 'Testing FatRat .2**10');
+is(FatRat.new(1,5**11).precise, '0.00000002048', 'Testing FatRat .2**11');
+is(FatRat.new(1,5**12).precise, '0.000000004096', 'Testing FatRat .2**12');
+is(FatRat.new(1,5**13).precise, '0.0000000008192', 'Testing FatRat .2**13');
+is(FatRat.new(1,5**14).precise, '0.00000000016384', 'Testing FatRat .2**14');
+is(FatRat.new(1,5**15).precise, '0.000000000032768', 'Testing FatRat .2**15');
+is(FatRat.new(1,5**16).precise, '0.0000000000065536', 'Testing FatRat .2**16');
+is(FatRat.new(1,5**17).precise, '0.00000000000131072', 'Testing FatRat .2**17');
+is(FatRat.new(1,5**18).precise, '0.000000000000262144', 'Testing FatRat .2**18');
+is(FatRat.new(1,5**19).precise, '0.0000000000000524288', 'Testing FatRat .2**19');
+is(FatRat.new(1,5**20).precise, '0.00000000000001048576', 'Testing FatRat .2**20');
+is(FatRat.new(1,5**21).precise, '0.000000000000002097152', 'Testing FatRat .2**21');
+is(FatRat.new(1,5**22).precise, '0.0000000000000004194304', 'Testing FatRat .2**22');
+is(FatRat.new(1,5**23).precise, '0.00000000000000008388608', 'Testing FatRat .2**23');
+is(FatRat.new(1,5**24).precise, '0.000000000000000016777216', 'Testing FatRat .2**24');
+is(FatRat.new(1,5**25).precise, '0.0000000000000000033554432', 'Testing FatRat .2**25');
+is(FatRat.new(1,5**26).precise, '0.00000000000000000067108864', 'Testing FatRat .2**26');
+is(FatRat.new(1,5**27).precise, '0.000000000000000000134217728', 'Testing FatRat .2**27');
+is(FatRat.new(1,5**28).precise, '0.0000000000000000000268435456', 'Testing FatRat .2**28');
+is(FatRat.new(1,5**29).precise, '0.00000000000000000000536870912', 'Testing FatRat .2**29');
+is(FatRat.new(1,5**30).precise, '0.000000000000000000001073741824', 'Testing FatRat .2**30');
+is(FatRat.new(1,5**31).precise, '0.0000000000000000000002147483648', 'Testing FatRat .2**31');
+is(FatRat.new(1,5**32).precise, '0.00000000000000000000004294967296', 'Testing FatRat .2**32');
+is(FatRat.new(1,5**33).precise, '0.000000000000000000000008589934592', 'Testing FatRat .2**33');
+is(FatRat.new(1,5**34).precise, '0.0000000000000000000000017179869184', 'Testing FatRat .2**34');
+is(FatRat.new(1,5**35).precise, '0.00000000000000000000000034359738368', 'Testing FatRat .2**35');
+is(FatRat.new(1,5**36).precise, '0.000000000000000000000000068719476736', 'Testing FatRat .2**36');
+is(FatRat.new(1,5**37).precise, '0.0000000000000000000000000137438953472', 'Testing FatRat .2**37');
+is(FatRat.new(1,5**38).precise, '0.00000000000000000000000000274877906944', 'Testing FatRat .2**38');
+is(FatRat.new(1,5**39).precise, '0.000000000000000000000000000549755813888', 'Testing FatRat .2**39');
+is(FatRat.new(1,5**40).precise, '0.0000000000000000000000000001099511627776', 'Testing FatRat .2**40');
+is(FatRat.new(1,5**41).precise, '0.00000000000000000000000000002199023255552', 'Testing FatRat .2**41');
+is(FatRat.new(1,5**42).precise, '0.000000000000000000000000000004398046511104', 'Testing FatRat .2**42');
+is(FatRat.new(1,5**43).precise, '0.0000000000000000000000000000008796093022208', 'Testing FatRat .2**43');
+is(FatRat.new(1,5**44).precise, '0.00000000000000000000000000000017592186044416', 'Testing FatRat .2**44');
+is(FatRat.new(1,5**45).precise, '0.000000000000000000000000000000035184372088832', 'Testing FatRat .2**45');
+is(FatRat.new(1,5**46).precise, '0.0000000000000000000000000000000070368744177664', 'Testing FatRat .2**46');
+is(FatRat.new(1,5**47).precise, '0.00000000000000000000000000000000140737488355328', 'Testing FatRat .2**47');
+is(FatRat.new(1,5**48).precise, '0.000000000000000000000000000000000281474976710656', 'Testing FatRat .2**48');
+is(FatRat.new(1,5**49).precise, '0.0000000000000000000000000000000000562949953421312', 'Testing FatRat .2**49');
+is(FatRat.new(1,5**50).precise, '0.00000000000000000000000000000000001125899906842624', 'Testing FatRat .2**50');
+is(FatRat.new(1,5**51).precise, '0.000000000000000000000000000000000002251799813685248', 'Testing FatRat .2**51');
+is(FatRat.new(1,5**52).precise, '0.0000000000000000000000000000000000004503599627370496', 'Testing FatRat .2**52');
+is(FatRat.new(1,5**53).precise, '0.00000000000000000000000000000000000009007199254740992', 'Testing FatRat .2**53');
+is(FatRat.new(1,5**54).precise, '0.000000000000000000000000000000000000018014398509481984', 'Testing FatRat .2**54');
+is(FatRat.new(1,5**55).precise, '0.0000000000000000000000000000000000000036028797018963968', 'Testing FatRat .2**55');
+is(FatRat.new(1,5**56).precise, '0.00000000000000000000000000000000000000072057594037927936', 'Testing FatRat .2**56');
+is(FatRat.new(1,5**57).precise, '0.000000000000000000000000000000000000000144115188075855872', 'Testing FatRat .2**57');
+is(FatRat.new(1,5**58).precise, '0.0000000000000000000000000000000000000000288230376151711744', 'Testing FatRat .2**58');
+is(FatRat.new(1,5**59).precise, '0.00000000000000000000000000000000000000000576460752303423488', 'Testing FatRat .2**59');
+is(FatRat.new(1,5**60).precise, '0.000000000000000000000000000000000000000001152921504606846976', 'Testing FatRat .2**60');
+is(FatRat.new(1,5**61).precise, '0.0000000000000000000000000000000000000000002305843009213693952', 'Testing FatRat .2**61');
+is(FatRat.new(1,5**62).precise, '0.00000000000000000000000000000000000000000004611686018427387904', 'Testing FatRat .2**62');
+is(FatRat.new(1,5**63).precise, '0.000000000000000000000000000000000000000000009223372036854775808', 'Testing FatRat .2**63');
+is(FatRat.new(1,5**64).precise, '0.0000000000000000000000000000000000000000000018446744073709551616', 'Testing FatRat .2**64');
+
 
 
 is(FatRat.new( 1,1).precise(45), '1', 'Testing digits parameter 1/1');

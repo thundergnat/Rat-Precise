@@ -1,10 +1,11 @@
 use Test;
 use Rat::Precise;
 
-plan 126;
+plan 153;
 
-can-ok( Rat, 'precise', 'Rat has been augmented with .precise');
+can-ok( Rat, 'precise', 'Rat can .precise');
 
+# Testing terminating powers of 2 denominators
 is( (.5**0).precise, '1', 'Testing .5**0');
 is( (.5**1).precise, '0.5', 'Testing .5**1');
 is( (.5**2).precise, '0.25', 'Testing .5**2');
@@ -69,6 +70,36 @@ is((.5**60).precise, '0.00000000000000000086736173798840354720596224069595336914
 is((.5**61).precise, '0.0000000000000000004336808689942017736029811203479766845703125', 'Testing .5**61');
 is((.5**62).precise, '0.00000000000000000021684043449710088680149056017398834228515625', 'Testing .5**62');
 is((.5**63).precise, '0.000000000000000000108420217248550443400745280086994171142578125', 'Testing .5**63');
+
+# Testing terminating powers of 5 denominators
+is( (.2**1).precise, '0.2', 'Testing .2**1');
+is( (.2**2).precise, '0.04', 'Testing .2**2');
+is( (.2**3).precise, '0.008', 'Testing .2**3');
+is( (.2**4).precise, '0.0016', 'Testing .2**4');
+is( (.2**5).precise, '0.00032', 'Testing .2**5');
+is( (.2**6).precise, '0.000064', 'Testing .2**6');
+is( (.2**7).precise, '0.0000128', 'Testing .2**7');
+is( (.2**8).precise, '0.00000256', 'Testing .2**8');
+is( (.2**9).precise, '0.000000512', 'Testing .2**9');
+is((.2**10).precise, '0.0000001024', 'Testing .2**10');
+is((.2**11).precise, '0.00000002048', 'Testing .2**11');
+is((.2**12).precise, '0.000000004096', 'Testing .2**12');
+is((.2**13).precise, '0.0000000008192', 'Testing .2**13');
+is((.2**14).precise, '0.00000000016384', 'Testing .2**14');
+is((.2**15).precise, '0.000000000032768', 'Testing .2**15');
+is((.2**16).precise, '0.0000000000065536', 'Testing .2**16');
+is((.2**17).precise, '0.00000000000131072', 'Testing .2**17');
+is((.2**18).precise, '0.000000000000262144', 'Testing .2**18');
+is((.2**19).precise, '0.0000000000000524288', 'Testing .2**19');
+is((.2**20).precise, '0.00000000000001048576', 'Testing .2**20');
+is((.2**21).precise, '0.000000000000002097152', 'Testing .2**21');
+is((.2**22).precise, '0.0000000000000004194304', 'Testing .2**22');
+is((.2**23).precise, '0.00000000000000008388608', 'Testing .2**23');
+is((.2**24).precise, '0.000000000000000016777216', 'Testing .2**24');
+is((.2**25).precise, '0.0000000000000000033554432', 'Testing .2**25');
+is((.2**26).precise, '0.00000000000000000067108864', 'Testing .2**26');
+is((.2**27).precise, '0.000000000000000000134217728', 'Testing .2**27');
+
 
 is(Rat.new( 1,1).precise(25), '1', 'Testing digits parameter 1/1');
 is(Rat.new( 1,2).precise(25), '0.5', 'Testing digits parameter 1/2');
