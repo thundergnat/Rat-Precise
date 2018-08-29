@@ -1,11 +1,11 @@
-unit module Rat::Precise:ver<0.0.3>:auth<github:thundergnat>;
+unit module Rat::Precise:ver<0.0.4>:auth<github:thundergnat>;
 use MONKEY-TYPING;
 use nqp;
 
 augment class FatRat {
     method precise (Int $digits?, Bool :$z = False ) {
-        my $whole  = self.abs.floor;
-        my $fract  = self.abs - $whole;
+        my $whole  = floor(abs(self));
+        my $fract  = abs(self) - $whole;
 
         my $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ $whole;
 
@@ -28,7 +28,7 @@ augment class FatRat {
                     $precision = msb($!denominator);
                 }
                 # denominator is terminating power of 5
-                elsif my $base5b = $base5.parse-base(2) and
+                elsif my $base5b = parse-base($base5, 2) and
                   not $base5b +& ($base5b - 1) {
                     $precision = nqp::chars($base5.Str);
                 }
@@ -42,16 +42,17 @@ augment class FatRat {
                     $precision = nqp::chars($!denominator.Str) + 1;
                 }
             }
-            $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
+            my $pow = nqp::pow_I(10, nqp::decont($precision), Num, Int);
+            $fract *= $pow;
             my $f  = round($fract).Str;
-            if $digits.defined and $f == 10 ** $precision {
+            if $digits.defined and $f == $pow {
                 $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ ($whole + 1);
                 $f = $z ?? '0' x $precision !! '';
             }
             my int $fc = nqp::chars($f);
             unless $z {
                 if +$f { # Remove trailing zeros
-                    $f.=chop while $f.chars and substr($f,*-1) eq '0';
+                    $f = chop($f) while chars($f) and substr($f,*-1) eq '0';
                 }
                 else {
                     return $result;
@@ -65,19 +66,20 @@ augment class FatRat {
 
 augment class Rat {
     method precise (Int $digits?, Bool :$z = False ) {
-        my $whole  = self.abs.floor;
-        my $fract  = self.abs - $whole;
-
-        my $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ $whole;
-
-        my int $precision = 0;
+        my $whole  = floor(abs(self));
+        my $fract  = abs(self) - $whole;
 
         # fight floating point noise, Rats only
         if $fract.Num == 1e0 {
             $whole += 1;
             $fract = 0;
         }
-        elsif $fract {
+
+        my $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ $whole;
+
+        my int $precision = 0;
+
+        if $fract {
             if $digits.defined and $digits > 0 {
                 $precision = $digits;
             }
@@ -93,7 +95,7 @@ augment class Rat {
                     $precision = msb($!denominator);
                 }
                 # denominator is terminating power of 5
-                elsif my $base5b = $base5.parse-base(2) and
+                elsif my $base5b = parse-base($base5,2) and
                   not $base5b +& ($base5b - 1) {
                     $precision = nqp::chars($base5.Str);
                 }
@@ -107,12 +109,17 @@ augment class Rat {
                     $precision = nqp::chars($!denominator.Str) + 1;
                 }
             }
-            $fract *= nqp::pow_I(10, nqp::decont($precision), Num, Int);
+            my $pow = nqp::pow_I(10, nqp::decont($precision), Num, Int);
+            $fract *= $pow;
             my $f  = round($fract).Str;
+            if $digits.defined and $f == $pow {
+                $result = nqp::if(nqp::islt_I($!numerator, 0), '-', '') ~ ($whole + 1);
+                $f = $z ?? '0' x $precision !! '';
+            }
             my int $fc = nqp::chars($f);
             unless $z {
                 if +$f { # Remove trailing zeros
-                    $f.=chop while $f.chars and substr($f,*-1) eq '0';
+                    $f = chop($f) while chars($f) and substr($f,*-1) eq '0';
                 }
                 else {
                     return $result;
