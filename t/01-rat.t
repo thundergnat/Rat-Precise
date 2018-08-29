@@ -1,7 +1,7 @@
 use Test;
 use Rat::Precise;
 
-plan 123;
+plan 126;
 
 can-ok( Rat, 'precise', 'Rat has been augmented with .precise');
 
@@ -129,6 +129,10 @@ is((7/1610).precise(24, :z), '0.004347826086956521739130', 'unless the :z parame
 is((7/1610).precise(2), '0', 'degenerate non-significant zeros are trimmed');
 is((7/1610).precise(2, :z), '0.00', 'unless the :z parameter is set');
 is((7/1610).precise(0), '0', 'zero digits returns integer portion only');
+
+is(Rat.new(999999999,1000000000).precise, '0.999999999','No rounding when not appropriate');
+is(Rat.new(999999999,1000000000).precise(8), '1', 'Rounds when appropriate');
+is(Rat.new(999999999,1000000000).precise(8, :z), '1.00000000', 'Rounds but preserves zeros');
 
 throws-like({(.5**64).precise}, X::Method::NotFound, 'Overflow to Num fails as expected');
 
