@@ -37,7 +37,7 @@ my role Precise {
                 elsif nqp::eqaddr(self.WHAT,Rat) and self.denominator < 1000000000000000 {
                     $precision = 16;
                 }
-                # non-terminating FatRat, return a minimum 16 terms
+                # non-terminating FatRat, return a minimum 32 terms
                 elsif nqp::eqaddr(self.WHAT,FatRat) and self.denominator < 10000000000000000000000000000000 {
                     $precision = 32;
                 }
