@@ -1,4 +1,4 @@
-unit module Rat::Precise:ver<0.1.0>:auth<github:thundergnat>;
+unit module Rat::Precise:ver<0.1.1>:auth<github:thundergnat>;
 use nqp;
 
 my role Precise {
@@ -17,55 +17,53 @@ my role Precise {
 
         my int $precision = 0;
 
-        if $fract {
-            if $digits.defined and $digits > 0 {
-                $precision = $digits;
+        if $digits.defined and $digits > 0 {
+            $precision = $digits;
+        }
+        elsif $digits.defined and $digits == 0 {
+            return $result;
+        }
+        elsif $fract {
+            # denominator is terminating power of 2
+            if nqp::isfalse(nqp::bitand_I(self.denominator, self.denominator - 1, Int)) {
+                $precision = msb(self.denominator);
             }
-            elsif $digits.defined and $digits == 0 {
-                return $result;
+            # denominator is terminating power of 5
+            elsif my $base5 = po5(self.denominator) {
+                $precision = $base5;
+            }
+            # non-terminating Rat, return a minimum 16 terms
+            elsif nqp::eqaddr(self.WHAT,Rat) and self.denominator < 1000000000000000 {
+                $precision = 16;
+            }
+            # non-terminating FatRat, return a minimum 32 terms
+            elsif nqp::eqaddr(self.WHAT,FatRat) and self.denominator < 10000000000000000000000000000000 {
+                $precision = 32;
+            }
+            # denominator > min and non-terminating, or power of 10 or
+            # greater, return self.denominator.chars + 1 digits
+            else {
+                $precision = nqp::chars(self.denominator.Str) + 1;
+            }
+        }
+        my $pow = nqp::pow_I(10, nqp::decont($precision), Num, Int);
+        $fract *= $pow;
+        my $f  = round($fract).Str;
+        if $digits.defined and $f == $pow {
+            $result = nqp::if(nqp::islt_I(self.numerator, 0), '-', '') ~ ($whole + 1);
+            $f = $z ?? '0' x $precision !! '';
+        }
+        my int $fc = nqp::chars($f);
+        unless $z {
+            if +$f { # Remove trailing zeros
+                $f = chop($f) while chars($f) and substr($f,*-1) eq '0';
             }
             else {
-                # denominator is terminating power of 2
-                if nqp::isfalse(nqp::bitand_I(self.denominator, self.denominator - 1, Int)) {
-                    $precision = msb(self.denominator);
-                }
-                # denominator is terminating power of 5
-                elsif my $base5 = po5(self.denominator) {
-                    $precision = $base5;
-                }
-                # non-terminating Rat, return a minimum 16 terms
-                elsif nqp::eqaddr(self.WHAT,Rat) and self.denominator < 1000000000000000 {
-                    $precision = 16;
-                }
-                # non-terminating FatRat, return a minimum 32 terms
-                elsif nqp::eqaddr(self.WHAT,FatRat) and self.denominator < 10000000000000000000000000000000 {
-                    $precision = 32;
-                }
-                 # denominator > min and non-terminating, or power of 10 or
-                 # greater, return self.denominator.chars + 1 digits
-                else {
-                    $precision = nqp::chars(self.denominator.Str) + 1;
-                }
+                return $result;
             }
-            my $pow = nqp::pow_I(10, nqp::decont($precision), Num, Int);
-            $fract *= $pow;
-            my $f  = round($fract).Str;
-            if $digits.defined and $f == $pow {
-                $result = nqp::if(nqp::islt_I(self.numerator, 0), '-', '') ~ ($whole + 1);
-                $f = $z ?? '0' x $precision !! '';
-            }
-            my int $fc = nqp::chars($f);
-            unless $z {
-                if +$f { # Remove trailing zeros
-                    $f = chop($f) while chars($f) and substr($f,*-1) eq '0';
-                }
-                else {
-                    return $result;
-                }
-            }
-            $result ~= '.' ~ '0' x ($precision - $fc) ~ $f;
         }
-    $result
+        $result ~= '.' ~ '0' x ($precision - $fc) ~ $f;
+        $result
     }
 
     sub po5 ($five is copy) {
@@ -75,7 +73,7 @@ my role Precise {
              $div++;
              return False unless $five.narrow ~~ Int;
              return $div if $five == 1;
-         }
+        }
     }
 }
 
@@ -155,7 +153,7 @@ configurable specified precision.
 The :z flag is mostly intended to be used in combination with a digits
 parameter. It may be used on its own, but may return slightly non-intuitive
 results. In order to save unnecessary calculations (and speed up the overall
-process) the .precise method only checks for terminating fractions that
+process) the .precise method only checks for terminating fractions that are
 multiples of 2 & 5 less than 10. To avoid lots of pointless checks and general
 slowdown, any terminating fraction that is a multiple of 10 or above will be
 calculated out to the default precision (16 digits for Rats, 32 for FatRats or
