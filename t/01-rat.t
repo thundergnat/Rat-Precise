@@ -127,7 +127,7 @@ is(Rat.new(1,23).precise(25), '0.0434782608695652173913043', 'Testing digits par
 is(Rat.new(1,24).precise(25), '0.0416666666666666666666667', 'Testing digits parameter 1/24');
 is(Rat.new(1,25).precise(25), '0.04', 'Testing digits parameter 1/25');
 
-is(Rat.new( 1,1).precise(25, :z), '1', 'Testing digits with :z flag parameter 1/1');
+is(Rat.new( 1,1).precise(25, :z), '1.0000000000000000000000000', 'Testing digits with :z flag parameter 1/1');
 is(Rat.new( 1,2).precise(25, :z), '0.5000000000000000000000000', 'Testing digits with :z flag parameter 1/2');
 is(Rat.new( 1,3).precise(25, :z), '0.3333333333333333333333333', 'Testing digits with :z flag parameter 1/3');
 is(Rat.new( 1,4).precise(25, :z), '0.2500000000000000000000000', 'Testing digits with :z flag parameter 1/4');

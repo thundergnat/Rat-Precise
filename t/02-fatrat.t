@@ -195,7 +195,7 @@ is(FatRat.new(1,24).precise(45), '0.04166666666666666666666666666666666666666666
 is(FatRat.new(1,25).precise(45), '0.04', 'Testing digits parameter 1/25');
 
 
-is(FatRat.new( 1,1).precise(45, :z), '1', 'Testing digits with :z flag parameter 1/1');
+is(FatRat.new( 1,1).precise(45, :z), '1.000000000000000000000000000000000000000000000', 'Testing digits with :z flag parameter 1/1');
 is(FatRat.new( 1,2).precise(45, :z), '0.500000000000000000000000000000000000000000000', 'Testing digits with :z flag parameter 1/2');
 is(FatRat.new( 1,3).precise(45, :z), '0.333333333333333333333333333333333333333333333', 'Testing digits with :z flag parameter 1/3');
 is(FatRat.new( 1,4).precise(45, :z), '0.250000000000000000000000000000000000000000000', 'Testing digits with :z flag parameter 1/4');
