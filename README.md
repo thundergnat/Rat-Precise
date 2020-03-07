@@ -3,6 +3,8 @@ NAME
 
 Rat::Precise
 
+[![Build Status](https://travis-ci.org/thundergnat/Rat-Precise.svg?branch=master)](https://travis-ci.org/thundergnat/Rat-Precise)
+
 SYNOPSIS
 ========
 

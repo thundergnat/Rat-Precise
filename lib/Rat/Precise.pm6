@@ -90,6 +90,8 @@ augment class FatRat does Precise { };
 
 Rat::Precise
 
+[![Build Status](https://travis-ci.org/thundergnat/Rat-Precise.svg?branch=master)](https://travis-ci.org/thundergnat/Rat-Precise)
+
 =head1 SYNOPSIS
 
 Stringify Rats to a configurable precision.
