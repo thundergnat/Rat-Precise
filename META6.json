@@ -1,15 +1,30 @@
 {
-    "perl"          : "6.c",
-    "name"          : "Rat::Precise",
-    "version"       : "0.1.1",
-    "description"   : "Configurable stringification for Rational numbers",
-    "authors"       : [ "Steve Schulze (thundergnat)" ],
-    "provides"      : { "Rat::Precise" : "lib/Rat/Precise.pm6" },
-    "depends"       : [ ],
-    "build-depends" : [ ],
-    "test-depends"  : [ "Test" ],
-    "source-type"   : "git",
-    "source-url"    : "git://github.com/thundergnat/Rat-Precise.git",
-    "license"       : "Artistic-2.0",
-    "tags"          : [ "Rat", "Rational", "precision", "precise", "stringify" ]
+  "auth": "zef:thundergnat",
+  "authors": [
+    "Steve Schulze (thundergnat)"
+  ],
+  "build-depends": [
+  ],
+  "depends": [
+  ],
+  "description": "Configurable stringification for Rational numbers",
+  "license": "Artistic-2.0",
+  "name": "Rat::Precise",
+  "perl": "6.*",
+  "provides": {
+    "Rat::Precise": "lib/Rat/Precise.pm6"
+  },
+  "resources": [
+  ],
+  "source-url": "git://github.com/thundergnat/Rat-Precise.git",
+  "tags": [
+    "Rat",
+    "Rational",
+    "precision",
+    "precise",
+    "stringify"
+  ],
+  "test-depends": [
+  ],
+  "version": "0.1.2"
 }

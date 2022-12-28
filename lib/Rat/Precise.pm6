@@ -1,4 +1,4 @@
-unit module Rat::Precise:ver<0.1.1>:auth<github:thundergnat>;
+unit module Rat::Precise:ver<0.1.2>:auth<zef:thundergnat>;
 use nqp;
 
 my role Precise {
@@ -90,8 +90,6 @@ augment class FatRat does Precise { };
 
 Rat::Precise
 
-[![Build Status](https://travis-ci.org/thundergnat/Rat-Precise.svg?branch=master)](https://travis-ci.org/thundergnat/Rat-Precise)
-
 =head1 SYNOPSIS
 
 Stringify Rats to a configurable precision.
@@ -100,21 +98,24 @@ Provides a Rational method .precise.
 Pass in a positive integer to set places of precision.
 Pass in a boolean flag :z to preserve trailing zeros.
 
+=begin code :lang<raku>
 
-    use Rat::Precise;
+use Rat::Precise;
 
-    my $rat = 2213445/437231;
+my $rat = 2213445/437231;
 
-    say $rat;                 # 5.0624155
-    say $rat.precise;         # 5.0624155194851234
-    say $rat.FatRat.precise;  # 5.06241551948512342445983930691099
-    say $rat.precise(37);     # 5.06241551948512342445983930691099213
-    say $rat.precise(37, :z); # 5.0624155194851234244598393069109921300
-    say $rat.precise(0);      # 5
+say $rat;                 # 5.0624155
+say $rat.precise;         # 5.0624155194851234
+say $rat.FatRat.precise;  # 5.06241551948512342445983930691099
+say $rat.precise(37);     # 5.06241551948512342445983930691099213
+say $rat.precise(37, :z); # 5.0624155194851234244598393069109921300
+say $rat.precise(0);      # 5
 
-    # terminating Rats
-    say (1.5**63).Str;     # 124093581919.64894769782737365038
-    say (1.5**63).precise; # 124093581919.648947697827373650380188008224280338254175148904323577880859375
+# terminating Rats
+say (1.5**63).Str;     # 124093581919.64894769782737365038
+say (1.5**63).precise; # 124093581919.648947697827373650380188008224280338254175148904323577880859375
+
+=end code
 
 
 =head1 DESCRIPTION
